@@ -22,7 +22,13 @@ public class ArticleClient {
 		}
 		response.close();
 		
+		response = client.target("http://localhost:8080/olfdb/Pantheon/articles/1")
+				.request("application/JSON").buildGet().invoke();
 		
+		System.out.println(response.readEntity(String.class));
+		System.out.println("Header:" + response.getHeaders().toString());
+
+		System.out.println("Status: " + response.getStatus());
 	}
 
 }
