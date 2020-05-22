@@ -15,8 +15,11 @@ public class Main {
 
 	public static void main(String[] args) {
 		Client client = ClientBuilder.newClient();
-		//printCustomer(client);
 		//addCustomer(client);
+		// updateCustomer(client);
+		// deleteCustomer(client);
+		//printCustomer(client);
+		//printCustomersByLastname(client);
 		printAllArticles(client);
 		printAllCustomers(client);
 		printAllOrders(client);
@@ -45,6 +48,17 @@ public class Main {
 		
 		System.out.println(response.readEntity(String.class));
 	}
+	public static void printCustomersByLastname(Client client) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers?lastName=Johnsson")
+				.request("application/JSON").buildGet().invoke();
+		// System.out.println("String entity: " + response.readEntity(String.class));
+		List<Customer> customers = response.readEntity(new GenericType<List<Customer>>() {
+		});
+
+		for (Customer next : customers) {
+			System.out.println(next);
+		}
+	}
 
 	public static void addCustomer(Client c) {
 
@@ -63,6 +77,35 @@ public class Main {
 			}
 			response.close();
 		}
+	}
+	public static void updateCustomer(Client c) {
+
+		Customer simon = new Customer("Simon", "Hagelin", "Danstig 1", "12332", "Göteborg", 0);
+		Entity simonEntity = Entity.entity(simon, "application/JSON");
+
+		Response response = c.target("http://localhost:8080/olfdb/Pantheon/customers?id=111").request()
+				.buildPut(simonEntity).invoke();
+
+		System.out.println("Header:" + response.getHeaders().toString());
+		System.out.println("Status: " + response.getStatus());
+		System.out.println("String entity: " + response.readEntity(String.class));
+		response.close();
+	}
+	private static void deleteCustomer(Client client) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/111").request().buildDelete()
+				.invoke();
+
+		System.out.println("Header:" + response.getHeaders().toString());
+		System.out.println("Status: " + response.getStatus());
+		System.out.println("String entity: " + response.readEntity(String.class));
+
+//		response = client.target("http://localhost:8080/olfdb/Pantheon/customers/111").request("application/JSON")
+//				.buildGet().invoke();
+//		System.out.println("Header:" + response.getHeaders().toString());
+//		System.out.println("Status: " + response.getStatus());
+//		System.out.println("String entity: " + response.readEntity(String.class));
+		response.close();
+
 	}
 
 	public static void addArticle(Client c) {
