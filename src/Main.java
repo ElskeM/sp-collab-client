@@ -17,11 +17,21 @@ public class Main {
 		Client client = ClientBuilder.newClient();
 		//printCustomer(client);
 		//addCustomer(client);
+		printAllArticles(client);
 		printAllCustomers(client);
 		printAllOrders(client);
 	}
 	
 	
+	private static void printAllArticles(Client client) {
+
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles")
+				.request("application/JSON").buildGet().invoke();
+		System.out.println(response.readEntity(String.class));
+		
+	}
+
+
 	public static void printAllCustomers(Client c) {
 		
 		Response response = c.target("http://localhost:8080/olfdb/Pantheon/customers")
@@ -32,6 +42,7 @@ public class Main {
 //		for (Customer next : customers) {
 //			System.out.println(next);
 //		}
+		
 		System.out.println(response.readEntity(String.class));
 	}
 
