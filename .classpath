@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="/home/ptemrz/java/yrgo-serverprog/OrderLagerFaktureringService/dist/olfdbClasses.jar"/>
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/lib/animal-sniffer-annotations-1.18.jar"/>
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/lib/apache-mime4j-core-0.7.2.jar"/>
@@ -106,5 +105,6 @@
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/lib/weld-api-3.0.SP4.jar"/>
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/lib/yasson-1.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/resteasy-jaxrs-4.5.3.Final-all/resteasy-jaxrs-4.5.3.Final/resteasy-jboss-modules-4.5.3.Final/javax/ws/rs/api/main/jboss-jaxrs-api_2.1_spec-2.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/home/pontus/eclipse-workspace/sp-collab/dist/olfdbClasses.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
