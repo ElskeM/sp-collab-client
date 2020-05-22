@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title xmlns:d="http://docbook.org/ns/docbook" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory">Chapter 14. Optional parameter types</title><link rel="stylesheet" href="css/jbossorg.css" type="text/css"/><meta xmlns:d="http://docbook.org/ns/docbook" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" name="generator" content="DocBook XSL-NS Stylesheets V1.74.0"/><meta xmlns:d="http://docbook.org/ns/docbook" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" http-equiv="Content-Type" content="text/html; charset=UTF-8"/><link rel="home" href="index.html" title="RESTEasy JAX-RS"/><link rel="up" href="index.html" title="RESTEasy JAX-RS"/><link rel="prev" href="_NewParam.html" title="Chapter 13. Improved @…Param annotations"/><link rel="next" href="_DefaultValue.html" title="Chapter 15. @DefaultValue"/></head><body><p xmlns:d="http://docbook.org/ns/docbook" id="title"><a href="http://www.jboss.org" class="site_href"><strong>JBoss.org</strong></a><a href="http://docs.jboss.org/" class="doc_href"><strong>Community Documentation</strong></a></p><ul xmlns:d="http://docbook.org/ns/docbook" class="docnav"><li class="previous"><a accesskey="p" href="_NewParam.html"><strong>Prev</strong></a></li><li class="next"><a accesskey="n" href="_DefaultValue.html"><strong>Next</strong></a></li></ul><div class="chapter" lang="en-US"><div class="titlepage"><div><div><h2 class="title"><a id="_OptionalParam"/>Chapter 14. Optional parameter types</h2></div></div></div>
+    
+    <p>RESTEasy offers a mechanism to support a series of <code class="code">java.util.Optional</code> types as a wrapper object types. This
+        will give users the ability to use optional typed parameters, and eliminate all null checks by using methods
+        like <code class="code">Optional.orElse()</code>.
+    </p>
+    <p>Here is the sample:</p>
+    <pre xmlns="" xmlns:d="http://docbook.org/ns/docbook" xmlns:rf="java:org.jboss.highlight.XhtmlRendererFactory" class="">@Path("/double")
+@GET
+public String optDouble(@QueryParam("value") OptionalDouble value) {
+    return Double.toString(value.orElse(4242.0));
+}
+</pre>
+    <p>
+        From the above sample code we can see that the <code class="code">OptionalDouble</code> can be used as parameter type, and when users
+        don't provide a value in <code class="code">@QueryParam</code>, then the default value will be returned.
+    </p>
+    <p>
+        Here is the list of supported optional parameter types:
+        </p><div class="itemizedlist"><ul><li>
+                <p>@QueryParam</p>
+            </li><li>
+                <p>@FormParam</p>
+            </li><li>
+                <p>@MatrixParam</p>
+            </li><li>
+                <p>@HeaderParam</p>
+            </li><li>
+                <p>@CookieParam</p>
+            </li></ul></div><p>
+    </p>
+    <p>
+        As the list shown above, those parameter types support the Java-provided <code class="code">Optional</code> types. Please note that the <code class="code">@PathParam</code> is an exception for which <code class="code">Optional</code> is not available. The reason is that <code class="code">Optional</code> for the <code class="code">@PathParam</code> use case would just be a NO-OP, since an element of the path cannot be omitted.
+    </p>
+</div><ul xmlns:d="http://docbook.org/ns/docbook" class="docnav"><li class="previous"><a accesskey="p" href="_NewParam.html"><strong>Prev</strong>Chapter 13. Improved @…Param annotations</a></li><li class="up"><a accesskey="u" href="#"><strong>Top of page</strong></a></li><li class="home"><a accesskey="h" href="index.html"><strong>Front page</strong></a></li><li class="next"><a accesskey="n" href="_DefaultValue.html"><strong>Next</strong>Chapter 15. @DefaultValue</a></li></ul></body></html>
