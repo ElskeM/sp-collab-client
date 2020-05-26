@@ -68,7 +68,7 @@ public class Main {
 		
 		Entity orderEntity = Entity.entity(order, "application/JSON");
 		
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles")
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders")
 				.request("application/JSON").buildPost(orderEntity).invoke();
 		
 		System.out.println("Creating new order returned status code of " + response.getStatus());
@@ -114,14 +114,14 @@ public class Main {
 		}
 	}
 
-	public static void addCustomer(Client c) {
+	public static void addCustomer() {
 
 		Customer dan = new Customer("Dan", "Dansson", "Danstig 1", "12332", "Danekil", 0);
 
 		Entity danEntity = Entity.entity(dan, "application/JSON");
 
 		for (int i = 0; i < 100; i++) {
-			Response response = c.target("http://localhost:8080/olfdb/Pantheon/customers").request()
+			Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers").request()
 					.buildPost(danEntity).invoke();
 			System.out.println("Creating new customer returned status code of " + response.getStatus());
 			if (response.getStatus() == 201) {
@@ -133,12 +133,12 @@ public class Main {
 		}
 	}
 
-	public static void updateCustomer(Client c) {
+	public static void updateCustomer(int id) {
 
 		Customer simon = new Customer("Simon", "Hagelin", "Danstig 1", "12332", "Göteborg", 0);
 		Entity simonEntity = Entity.entity(simon, "application/JSON");
 
-		Response response = c.target("http://localhost:8080/olfdb/Pantheon/customers?id=111").request()
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request()
 				.buildPut(simonEntity).invoke();
 
 		System.out.println("Header:" + response.getHeaders().toString());
@@ -147,8 +147,8 @@ public class Main {
 		response.close();
 	}
 
-	private static void deleteCustomer(Client client) {
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/111").request().buildDelete()
+	private static void deleteCustomer(int id) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request().buildDelete()
 				.invoke();
 
 		System.out.println("Header:" + response.getHeaders().toString());
