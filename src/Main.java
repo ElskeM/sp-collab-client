@@ -27,9 +27,9 @@ public class Main {
 		printAllOrders();
 		// addOrder();
 		printAllOrders();
-		// addArticle();
-		//updateArticle();
-		deleteArticle(15151);
+		//addArticle();
+		updateArticle(20151);
+		//deleteArticle(15151);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -187,8 +187,11 @@ public class Main {
 	 * @author elske
 	 */
 	public static void updateArticle(int artNr) {
-		Article art = new Article("Harvpinne 8 mm", "Harvpinne som passar bl.a Browns. Höjd 127mm", 60, 71.00);
-		Entity artEntity = Entity.entity(art, "application/JSON");
+		Article updatedArt = new Article();
+		updatedArt.setDescription("Harvpinne som passar bl.a Browns. Höjd 127mm");
+		updatedArt.setStock(60);
+		updatedArt.setPrice(70.00);
+		Entity artEntity = Entity.entity(updatedArt, "application/JSON");
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles/" + artNr).request()
 				.buildPut(artEntity).invoke();
 		System.out.println("Updating Article returned status code of " + response.getStatus());
