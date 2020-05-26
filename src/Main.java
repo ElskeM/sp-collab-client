@@ -234,17 +234,4 @@ public class Main {
 		response.close();
 	}
 
-	public static void printArticleBetweenId(int fId, int sId) {
-		Response response = client
-				.target("http://localhost:8080/olfdb/Pantheon/articles?firstId=" + fId + "&secondId=" + sId)
-				.request("application/JSON").buildGet().invoke();
-
-		List<Article> articles = response.readEntity(new GenericType<List<Article>>() {
-		});
-
-		for (Article next : articles) {
-			System.out.println(next);
-		}
-	}
-
 }
