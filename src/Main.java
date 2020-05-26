@@ -17,19 +17,20 @@ public class Main {
 	static Client client = ClientBuilder.newClient();
 
 	public static void main(String[] args) {
-		// addCustomer(client);
-		// updateCustomer(client);
-		// deleteCustomer(client);
-		// printCustomer(client);
-		// printCustomersByLastname(client);
+		// addCustomer();
+		// updateCustomer();
+		// deleteCustomer();
+		// printCustomer();
+		// printCustomersByLastname();
 		// printAllArticles();
 		// printAllCustomers();
 		// printAllOrders();
-		addOrder();
-		printAllOrders();
-		//addArticle();
+		// addOrder();
+		//printAllOrders();
+		// addArticle();
 		// updateArticle(20151);
-		//deleteArticle(15151);
+		// deleteArticle(15151);
+		printArticleBetweenId(10003, 10006);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -55,22 +56,22 @@ public class Main {
 	private static void addOrder() {
 
 		Customer c = getCustomer(111);
-		
+
 		Article bult = getArticle(10000);
-		
+
 		Map<String, Integer> articles = new HashMap<>();
-		articles.put(""+bult.getArtNr(), 5);
-		
+		articles.put("" + bult.getArtNr(), 5);
+
 		CustomerOrder order = new CustomerOrder();
 		order.setArticles(articles);
 		order.setCustomer(c);
 		order.setOrderDate("2020-05-25");
-		
+
 		Entity orderEntity = Entity.entity(order, "application/JSON");
-		
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders")
-				.request("application/JSON").buildPost(orderEntity).invoke();
-		
+
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders").request("application/JSON")
+				.buildPost(orderEntity).invoke();
+
 		System.out.println("Creating new order returned status code of " + response.getStatus());
 		if (response.getStatus() == 201) {
 			System.out.println(response.getHeaders().toString());
@@ -148,8 +149,8 @@ public class Main {
 	}
 
 	private static void deleteCustomer(int id) {
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request().buildDelete()
-				.invoke();
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request()
+				.buildDelete().invoke();
 
 		System.out.println("Header:" + response.getHeaders().toString());
 		System.out.println("Status: " + response.getStatus());
@@ -164,9 +165,8 @@ public class Main {
 
 	}
 
-	
 	/**
-	 *@author elske 
+	 * @author elske
 	 */
 	public static void addArticle() {
 		Article art = new Article("Harvpinne 8 mm", "Harvpinne som passar bl.a Browns", 20, 71.00);
@@ -201,15 +201,13 @@ public class Main {
 		response.close();
 
 	}
-	
+
 	public static void deleteArticle(int artNr) {
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles/" + artNr).request().buildDelete()
-				.invoke();
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles/" + artNr).request()
+				.buildDelete().invoke();
 		System.out.println("Delete status was: " + response.getStatus());
 		response.close();
 	}
-	
-	
 
 	public static void printAllOrders() {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders").request("application/JSON")
@@ -234,6 +232,19 @@ public class Main {
 //		Customer cust = response.readEntity(Customer.class);
 //		System.out.println(cust);
 		response.close();
+	}
+
+	public static void printArticleBetweenId(int fId, int sId) {
+		Response response = client
+				.target("http://localhost:8080/olfdb/Pantheon/articles?firstId=" + fId + "&secondId=" + sId)
+				.request("application/JSON").buildGet().invoke();
+
+		List<Article> articles = response.readEntity(new GenericType<List<Article>>() {
+		});
+
+		for (Article next : articles) {
+			System.out.println(next);
+		}
 	}
 
 }
