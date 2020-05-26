@@ -22,13 +22,13 @@ public class Main {
 		// deleteCustomer(client);
 		// printCustomer(client);
 		// printCustomersByLastname(client);
-		printAllArticles();
-		printAllCustomers();
-		printAllOrders();
-		// addOrder();
+		// printAllArticles();
+		// printAllCustomers();
+		// printAllOrders();
+		addOrder();
 		printAllOrders();
 		//addArticle();
-		updateArticle(20151);
+		// updateArticle(20151);
 		//deleteArticle(15151);
 	}
 
@@ -54,30 +54,30 @@ public class Main {
 
 	private static void addOrder() {
 
-//		Customer c = getCustomer(111);
-//		
-//		Article bult = getArticle(10000);
-//		
-//		Map<Article, Integer> articles = new HashMap<>();
-//		articles.put(bult, 5);
-//		
-//		CustomerOrder order = new CustomerOrder();
-//		order.setArticles(articles);
-//		order.setCustomer(c);
-//		order.setOrderDate("2020-05-25");
-//		
-//		Entity orderEntity = Entity.entity(order, "application/JSON");
-//		
-//		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles")
-//				.request("application/JSON").buildPost(orderEntity).invoke();
-//		
-//		System.out.println("Creating new order returned status code of " + response.getStatus());
-//		if (response.getStatus() == 201) {
-//			System.out.println(response.getHeaders().toString());
-//			// System.out.println(response.readEntity(Employee.class).getId());
-//			System.out.println(response.readEntity(String.class));
-//		}
-//		response.close();
+		Customer c = getCustomer(111);
+		
+		Article bult = getArticle(10000);
+		
+		Map<String, Integer> articles = new HashMap<>();
+		articles.put(""+bult.getArtNr(), 5);
+		
+		CustomerOrder order = new CustomerOrder();
+		order.setArticles(articles);
+		order.setCustomer(c);
+		order.setOrderDate("2020-05-25");
+		
+		Entity orderEntity = Entity.entity(order, "application/JSON");
+		
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles")
+				.request("application/JSON").buildPost(orderEntity).invoke();
+		
+		System.out.println("Creating new order returned status code of " + response.getStatus());
+		if (response.getStatus() == 201) {
+			System.out.println(response.getHeaders().toString());
+			// System.out.println(response.readEntity(Employee.class).getId());
+			System.out.println(response.readEntity(String.class));
+		}
+		response.close();
 	}
 
 	private static void printAllArticles() {
