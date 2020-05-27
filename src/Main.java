@@ -195,7 +195,7 @@ public class Main {
 	}
 	
 	private static void getOrder(int orderNr) {
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders?orderNr=" + orderNr)
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr)
 				.request("application/JSON").buildGet().invoke();
 
 		System.out.println(response.readEntity(String.class));
@@ -251,12 +251,12 @@ public class Main {
 	
 	public static void updateCustomerOrder(int orderNr) {
 		CustomerOrder updatedOrder = new CustomerOrder();
-		Article harvpinne = getArticle(20151);
+		Article mutter = getArticle(10001);
 		Article bult = getArticle(10000);
 
 		Map<String, Integer> articles = new HashMap<>();
 		articles.put("" + bult.getArtNr(), 5);
-		articles.put("" + harvpinne.getArtNr(), 5);
+		articles.put("" + mutter.getArtNr(), 5);
 
 		updatedOrder.setArticles(articles);
 		updatedOrder.setDispatchDate("2020-05-30");
