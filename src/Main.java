@@ -18,19 +18,19 @@ public class Main {
 
 	public static void main(String[] args) {
 		// addCustomer();
-		// updateCustomer();
-		// deleteCustomer();
-		// printCustomer();
-		// printCustomersByLastname();
+		// addArticle();
+		// addOrder();
+		// printCustomer(111);
+		// printCustomersByLastname("Johnson");
+		// printArticleBetweenId(10003, 10006);
 		// printAllArticles();
 		// printAllCustomers();
 		// printAllOrders();
-		// addOrder();
-		//printAllOrders();
-		// addArticle();
+		// updateCustomer(111);
 		// updateArticle(20151);
+		// deleteCustomer(111);
 		// deleteArticle(15151);
-		printArticleBetweenId(10003, 10006);
+		printOrdersBetweenDates("2006-01-06", "2006-01-14");
 	}
 
 	private static Customer getCustomer(int id) {
@@ -94,17 +94,11 @@ public class Main {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers").request("application/JSON")
 				.buildGet().invoke();
 
-//		List<Customer> customers = response.readEntity(new GenericType<List<Customer>>() {});
-//		
-//		for (Customer next : customers) {
-//			System.out.println(next);
-//		}
-
 		System.out.println(response.readEntity(String.class));
 	}
 
-	public static void printCustomersByLastname(Client client) {
-		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers?lastName=Johnsson")
+	public static void printCustomersByLastname(String lastName) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers?lastName=" + lastName)
 				.request("application/JSON").buildGet().invoke();
 		// System.out.println("String entity: " + response.readEntity(String.class));
 		List<Customer> customers = response.readEntity(new GenericType<List<Customer>>() {
@@ -127,7 +121,6 @@ public class Main {
 			System.out.println("Creating new customer returned status code of " + response.getStatus());
 			if (response.getStatus() == 201) {
 				System.out.println(response.getHeaders().toString());
-				// System.out.println(response.readEntity(Employee.class).getId());
 				System.out.println(response.readEntity(String.class));
 			}
 			response.close();
@@ -156,11 +149,6 @@ public class Main {
 		System.out.println("Status: " + response.getStatus());
 		System.out.println("String entity: " + response.readEntity(String.class));
 
-//		response = client.target("http://localhost:8080/olfdb/Pantheon/customers/111").request("application/JSON")
-//				.buildGet().invoke();
-//		System.out.println("Header:" + response.getHeaders().toString());
-//		System.out.println("Status: " + response.getStatus());
-//		System.out.println("String entity: " + response.readEntity(String.class));
 		response.close();
 
 	}
@@ -221,10 +209,10 @@ public class Main {
 		// System.out.println(response.readEntity(String.class));
 	}
 
-	public static void printCustomer(Client c) {
+	public static void printCustomer(int id) {
 
-		Response response = c.target("http://localhost:8080/olfdb/Pantheon/customers/111").request("application/JSON")
-				.buildGet().invoke();
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id)
+				.request("application/JSON").buildGet().invoke();
 
 		System.out.println(response.getHeaders().toString());
 		System.out.println(response.getStatus());
@@ -233,10 +221,10 @@ public class Main {
 //		System.out.println(cust);
 		response.close();
 	}
-	
+
 	public static void printArticleBetweenId(int fId, int sId) {
 		Response response = client
-				.target("http://localhost:8080/olfdb/Pantheon/articles?firstId=" + fId + "&git psecondId=" + sId)
+				.target("http://localhost:8080/olfdb/Pantheon/articles?firstId=" + fId + "&secondId=" + sId)
 				.request("application/JSON").buildGet().invoke();
 
 		List<Article> articles = response.readEntity(new GenericType<List<Article>>() {
@@ -247,5 +235,15 @@ public class Main {
 		}
 	}
 
+	public static void printOrdersBetweenDates(String firstDate, String secondDate) {
+		Response response = client.target(
+				"http://localhost:8080/olfdb/Pantheon/orders?firstDate=" + firstDate + "&secondDate=" + secondDate)
+				.request("application/JSON").buildGet().invoke();
+		List<CustomerOrder> orders = response.readEntity(new GenericType<List<CustomerOrder>>() {
+		});
+		for (CustomerOrder next: orders) {
+			System.out.println(next);
+		}
+	}
 
 }
