@@ -25,15 +25,15 @@ public class Main {
 		// printArticleBetweenId(10003, 10006);
 		// printAllArticles();
 		// printAllCustomers();
-		// printAllOrders();
+		printAllOrders();
 		// updateCustomer(111);
 		// updateArticle(20151);
 		// deleteCustomer(111);
 		// deleteArticle(15151);
 		// printOrdersBetweenDates("2006-01-06", "2006-01-14");
-		// deleteCustomerOrder(323);
+		// deleteCustomerOrder(326);
 		// getOrder(1);
-		updateCustomerOrder(2);
+		// updateCustomerOrder(2);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -57,9 +57,7 @@ public class Main {
 	}
 
 	private static void addOrder() {
-
 		Customer c = getCustomer(111);
-
 		Article bult = getArticle(10000);
 
 		Map<String, Integer> articles = new HashMap<>();
@@ -70,7 +68,7 @@ public class Main {
 		order.setCustomer(c);
 		order.setOrderDate("2020-05-25");
 
-		Entity orderEntity = Entity.entity(order, "application/JSON");
+		Entity<CustomerOrder> orderEntity = Entity.entity(order, "application/JSON");
 
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders").request("application/JSON")
 				.buildPost(orderEntity).invoke();
@@ -78,14 +76,12 @@ public class Main {
 		System.out.println("Creating new order returned status code of " + response.getStatus());
 		if (response.getStatus() == 201) {
 			System.out.println(response.getHeaders().toString());
-			// System.out.println(response.readEntity(Employee.class).getId());
 			System.out.println(response.readEntity(String.class));
 		}
 		response.close();
 	}
 
 	private static void printAllArticles() {
-
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles").request("application/JSON")
 				.buildGet().invoke();
 		System.out.println(response.readEntity(String.class));
@@ -93,10 +89,8 @@ public class Main {
 	}
 
 	public static void printAllCustomers() {
-
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers").request("application/JSON")
 				.buildGet().invoke();
-
 		System.out.println(response.readEntity(String.class));
 	}
 
@@ -112,10 +106,8 @@ public class Main {
 	}
 
 	public static void addCustomer() {
-
 		Customer dan = new Customer("Dan", "Dansson", "Danstig 1", "12332", "Danekil", 0);
-
-		Entity danEntity = Entity.entity(dan, "application/JSON");
+		Entity<Customer> danEntity = Entity.entity(dan, "application/JSON");
 
 		for (int i = 0; i < 100; i++) {
 			Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers").request()
@@ -130,9 +122,8 @@ public class Main {
 	}
 
 	public static void updateCustomer(int id) {
-
 		Customer simon = new Customer("Simon", "Hagelin", "Danstig 1", "12332", "Göteborg", 0);
-		Entity simonEntity = Entity.entity(simon, "application/JSON");
+		Entity<Customer> simonEntity = Entity.entity(simon, "application/JSON");
 
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request()
 				.buildPut(simonEntity).invoke();
@@ -155,10 +146,9 @@ public class Main {
 
 	}
 
-
 	public static void addArticle() {
 		Article art = new Article("Harvpinne 8 mm", "Harvpinne som passar bl.a Browns", 20, 71.00);
-		Entity artEntity = Entity.entity(art, "application/JSON");
+		Entity<Article> artEntity = Entity.entity(art, "application/JSON");
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles").request()
 				.buildPost(artEntity).invoke();
 		System.out.println("Creating new Article returned status code of " + response.getStatus());
@@ -176,7 +166,7 @@ public class Main {
 		updatedArt.setDescription("Harvpinne som passar bl.a Browns. Höjd 127mm");
 		updatedArt.setStock(60);
 		updatedArt.setPrice(70.00);
-		Entity artEntity = Entity.entity(updatedArt, "application/JSON");
+		Entity<Article> artEntity = Entity.entity(updatedArt, "application/JSON");
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles/" + artNr).request()
 				.buildPut(artEntity).invoke();
 		System.out.println("Updating Article returned status code of " + response.getStatus());
@@ -184,7 +174,6 @@ public class Main {
 		System.out.println(response.readEntity(String.class));
 
 		response.close();
-
 	}
 
 	public static void deleteArticle(int artNr) {
@@ -193,17 +182,15 @@ public class Main {
 		System.out.println("Delete status was: " + response.getStatus());
 		response.close();
 	}
-	
+
 	private static CustomerOrder getOrder(int orderNr) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr)
 				.request("application/JSON").buildGet().invoke();
 
-		//System.out.println(response.readEntity(String.class));
 		CustomerOrder order = response.readEntity(CustomerOrder.class);
 		response.close();
 		return order;
 	}
-
 
 	public static void printAllOrders() {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders").request("application/JSON")
@@ -217,7 +204,6 @@ public class Main {
 	}
 
 	public static void printCustomer(int id) {
-
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id)
 				.request("application/JSON").buildGet().invoke();
 
@@ -241,16 +227,16 @@ public class Main {
 	}
 
 	public static void printOrdersBetweenDates(String fromDate, String toDate) {
-		Response response = client.target(
-				"http://localhost:8080/olfdb/Pantheon/orders?fromDate=" + fromDate + "&toDate=" + toDate)
+		Response response = client
+				.target("http://localhost:8080/olfdb/Pantheon/orders?fromDate=" + fromDate + "&toDate=" + toDate)
 				.request("application/JSON").buildGet().invoke();
 		List<CustomerOrder> orders = response.readEntity(new GenericType<List<CustomerOrder>>() {
 		});
-		for (CustomerOrder next: orders) {
+		for (CustomerOrder next : orders) {
 			System.out.println(next);
 		}
 	}
-	
+
 	public static void updateCustomerOrder(int orderNr) {
 		CustomerOrder updatedOrder = getOrder(orderNr);
 		Article mutter = getArticle(10001);
@@ -262,8 +248,8 @@ public class Main {
 
 		updatedOrder.setArticles(articles);
 		updatedOrder.setDispatchDate("2020-05-30");
-		
-		Entity coEntity = Entity.entity(updatedOrder, "application/JSON");
+
+		Entity<CustomerOrder> coEntity = Entity.entity(updatedOrder, "application/JSON");
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr).request()
 				.buildPut(coEntity).invoke();
 		System.out.println("Updating CustomerOrder returned status code of " + response.getStatus());
@@ -271,9 +257,8 @@ public class Main {
 		System.out.println(response.readEntity(String.class));
 
 		response.close();
-		
 	}
-	
+
 	private static void deleteCustomerOrder(int orderNr) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr).request()
 				.buildDelete().invoke();
@@ -282,7 +267,5 @@ public class Main {
 		System.out.println("Delete status was: " + response.getStatus());
 
 		response.close();
-
 	}
-
 }
