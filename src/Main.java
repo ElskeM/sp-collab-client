@@ -30,7 +30,8 @@ public class Main {
 		// updateArticle(20151);
 		// deleteCustomer(111);
 		// deleteArticle(15151);
-		printOrdersBetweenDates("2006-01-06", "2006-01-14");
+		// printOrdersBetweenDates("2006-01-06", "2006-01-14");
+		// deleteCustomerOrder(323);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -235,15 +236,26 @@ public class Main {
 		}
 	}
 
-	public static void printOrdersBetweenDates(String firstDate, String secondDate) {
+	public static void printOrdersBetweenDates(String fromDate, String toDate) {
 		Response response = client.target(
-				"http://localhost:8080/olfdb/Pantheon/orders?firstDate=" + firstDate + "&secondDate=" + secondDate)
+				"http://localhost:8080/olfdb/Pantheon/orders?fromDate=" + fromDate + "&toDate=" + toDate)
 				.request("application/JSON").buildGet().invoke();
 		List<CustomerOrder> orders = response.readEntity(new GenericType<List<CustomerOrder>>() {
 		});
 		for (CustomerOrder next: orders) {
 			System.out.println(next);
 		}
+	}
+	
+	private static void deleteCustomerOrder(int orderNr) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr).request()
+				.buildDelete().invoke();
+
+		System.out.println("Header:" + response.getHeaders().toString());
+		System.out.println("Delete status was: " + response.getStatus());
+
+		response.close();
+
 	}
 
 }
