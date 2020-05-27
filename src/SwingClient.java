@@ -30,8 +30,8 @@ public class SwingClient extends JFrame {
 
 	Client client = ClientBuilder.newClient();
 	private JList jList;
-	DefaultListModel model = new DefaultListModel();
-	DefaultListModel orderModel = new DefaultListModel();
+	DefaultListModel<Article> model = new DefaultListModel<Article>();
+	DefaultListModel<CustomerOrder> orderModel = new DefaultListModel<CustomerOrder>();
 	JScrollPane listContainer = new JScrollPane();
 
 	public static void main(String[] args) {
@@ -40,7 +40,11 @@ public class SwingClient extends JFrame {
 	}
 
 	public SwingClient() {
-		model.addAll(getAllArticles());
+		
+		for(Article a : getAllArticles()) {
+			model.addElement(a);
+		}
+		
 		JScrollPane scrollPane = new JScrollPane();
 		
 		jList =new JList(model);
@@ -76,11 +80,15 @@ public class SwingClient extends JFrame {
 
 	private void refreshList() {
 		model.removeAllElements();
-		model.addAll(getAllArticles());
+		for(Article a : getAllArticles()) {
+			model.addElement(a);
+		}
 	}
 	
 	public void orderScreen() {
-		orderModel.addAll(getAllOrders());
+		for(CustomerOrder o : getAllOrders()) {
+			orderModel.addElement(o);
+		}
 		//System.out.println(orderModel);
 		JList orderList =new JList(orderModel);
 		JScrollPane scrollPane = new JScrollPane();
