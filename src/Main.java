@@ -36,7 +36,7 @@ public class Main {
 		// updateCustomerOrder(2);
 	}
 
-	private static Customer getCustomer(int id) {
+	public static Customer getCustomer(int id) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id)
 				.request("application/JSON").buildGet().invoke();
 
@@ -46,7 +46,7 @@ public class Main {
 		return c;
 	}
 
-	private static Article getArticle(int id) {
+	public static Article getArticle(int id) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/articles/" + id)
 				.request("application/JSON").buildGet().invoke();
 
@@ -134,7 +134,7 @@ public class Main {
 		response.close();
 	}
 
-	private static void deleteCustomer(int id) {
+	public static void deleteCustomer(int id) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers/" + id).request()
 				.buildDelete().invoke();
 
@@ -183,7 +183,7 @@ public class Main {
 		response.close();
 	}
 
-	private static CustomerOrder getOrder(int orderNr) {
+	public static CustomerOrder getOrder(int orderNr) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr)
 				.request("application/JSON").buildGet().invoke();
 
@@ -259,7 +259,7 @@ public class Main {
 		response.close();
 	}
 
-	private static void deleteCustomerOrder(int orderNr) {
+	public static void deleteCustomerOrder(int orderNr) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr).request()
 				.buildDelete().invoke();
 
