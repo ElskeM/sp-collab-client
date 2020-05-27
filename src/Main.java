@@ -33,7 +33,7 @@ public class Main {
 		// printOrdersBetweenDates("2006-01-06", "2006-01-14");
 		// deleteCustomerOrder(323);
 		// getOrder(1);
-		updateCustomerOrder(321);
+		updateCustomerOrder(2);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -194,12 +194,14 @@ public class Main {
 		response.close();
 	}
 	
-	private static void getOrder(int orderNr) {
+	private static CustomerOrder getOrder(int orderNr) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr)
 				.request("application/JSON").buildGet().invoke();
 
-		System.out.println(response.readEntity(String.class));
+		//System.out.println(response.readEntity(String.class));
+		CustomerOrder order = response.readEntity(CustomerOrder.class);
 		response.close();
+		return order;
 	}
 
 
@@ -250,7 +252,7 @@ public class Main {
 	}
 	
 	public static void updateCustomerOrder(int orderNr) {
-		CustomerOrder updatedOrder = new CustomerOrder();
+		CustomerOrder updatedOrder = getOrder(orderNr);
 		Article mutter = getArticle(10001);
 		Article bult = getArticle(10000);
 
