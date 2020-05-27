@@ -32,6 +32,7 @@ public class Main {
 		// deleteArticle(15151);
 		// printOrdersBetweenDates("2006-01-06", "2006-01-14");
 		// deleteCustomerOrder(323);
+		  getOrder(1);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -101,7 +102,6 @@ public class Main {
 	public static void printCustomersByLastname(String lastName) {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/customers?lastName=" + lastName)
 				.request("application/JSON").buildGet().invoke();
-		// System.out.println("String entity: " + response.readEntity(String.class));
 		List<Customer> customers = response.readEntity(new GenericType<List<Customer>>() {
 		});
 
@@ -197,6 +197,15 @@ public class Main {
 		System.out.println("Delete status was: " + response.getStatus());
 		response.close();
 	}
+	
+	private static void getOrder(int orderNr) {
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders?orderNr=" + orderNr)
+				.request("application/JSON").buildGet().invoke();
+
+		System.out.println(response.readEntity(String.class));
+		response.close();
+	}
+
 
 	public static void printAllOrders() {
 		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders").request("application/JSON")
@@ -207,7 +216,6 @@ public class Main {
 			System.out.println(next);
 		}
 
-		// System.out.println(response.readEntity(String.class));
 	}
 
 	public static void printCustomer(int id) {
@@ -218,8 +226,7 @@ public class Main {
 		System.out.println(response.getHeaders().toString());
 		System.out.println(response.getStatus());
 		System.out.println(response.readEntity(String.class));
-//		Customer cust = response.readEntity(Customer.class);
-//		System.out.println(cust);
+
 		response.close();
 	}
 
@@ -227,7 +234,6 @@ public class Main {
 		Response response = client
 				.target("http://localhost:8080/olfdb/Pantheon/articles?firstId=" + fId + "&secondId=" + sId)
 				.request("application/JSON").buildGet().invoke();
-
 		List<Article> articles = response.readEntity(new GenericType<List<Article>>() {
 		});
 
