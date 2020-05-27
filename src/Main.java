@@ -32,7 +32,8 @@ public class Main {
 		// deleteArticle(15151);
 		// printOrdersBetweenDates("2006-01-06", "2006-01-14");
 		// deleteCustomerOrder(323);
-		  getOrder(1);
+		// getOrder(1);
+		updateCustomerOrder(321);
 	}
 
 	private static Customer getCustomer(int id) {
@@ -154,9 +155,7 @@ public class Main {
 
 	}
 
-	/**
-	 * @author elske
-	 */
+
 	public static void addArticle() {
 		Article art = new Article("Harvpinne 8 mm", "Harvpinne som passar bl.a Browns", 20, 71.00);
 		Entity artEntity = Entity.entity(art, "application/JSON");
@@ -172,9 +171,6 @@ public class Main {
 
 	}
 
-	/**
-	 * @author elske
-	 */
 	public static void updateArticle(int artNr) {
 		Article updatedArt = new Article();
 		updatedArt.setDescription("Harvpinne som passar bl.a Browns. Höjd 127mm");
@@ -251,6 +247,29 @@ public class Main {
 		for (CustomerOrder next: orders) {
 			System.out.println(next);
 		}
+	}
+	
+	public static void updateCustomerOrder(int orderNr) {
+		CustomerOrder updatedOrder = new CustomerOrder();
+		Article harvpinne = getArticle(20151);
+		Article bult = getArticle(10000);
+
+		Map<String, Integer> articles = new HashMap<>();
+		articles.put("" + bult.getArtNr(), 5);
+		articles.put("" + harvpinne.getArtNr(), 5);
+
+		updatedOrder.setArticles(articles);
+		updatedOrder.setDispatchDate("2020-05-30");
+		
+		Entity coEntity = Entity.entity(updatedOrder, "application/JSON");
+		Response response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + orderNr).request()
+				.buildPut(coEntity).invoke();
+		System.out.println("Updating CustomerOrder returned status code of " + response.getStatus());
+		System.out.println(response.getHeaders().toString());
+		System.out.println(response.readEntity(String.class));
+
+		response.close();
+		
 	}
 	
 	private static void deleteCustomerOrder(int orderNr) {
