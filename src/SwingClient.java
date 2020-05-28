@@ -52,7 +52,22 @@ public class SwingClient extends JFrame {
 	}
 
 	public SwingClient() {
+		
+		
+		JButton btnArt = new JButton("Articles");
+		JButton btnOrders = new JButton("Orders");
+		setLayout(new FlowLayout());
+		btnOrders.addActionListener(e -> orderScreen());
+		btnArt.addActionListener(e -> articleScreen());
+		add(btnArt);
+		add(btnOrders);
+		setBounds(350, 200, 90, 120);
+		setVisible(true);
 
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+	}
+	public void articleScreen() {
+		JFrame articleWindow = new JFrame("Master");
 		for (Article a : getAllArticles()) {
 			model.addElement(a);
 		}
@@ -61,8 +76,8 @@ public class SwingClient extends JFrame {
 
 		JList jList = new JList(model);
 		scrollPane.setViewportView(jList);
-		add(scrollPane);
-		setLayout(new GridLayout());
+		articleWindow.add(scrollPane);
+		articleWindow.setLayout(new GridLayout());
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.Y_AXIS));
 
@@ -71,24 +86,24 @@ public class SwingClient extends JFrame {
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(e -> articleInfoScreen(new Article("", "", 0, 0)));
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(e -> {Main.deleteArticle(((Article) jList.getSelectedValue()).getArtNr());
-		JOptionPane.showMessageDialog(this, "GONE!");});
+		btnDelete.addActionListener(e -> {
+			Main.deleteArticle(((Article) jList.getSelectedValue()).getArtNr());
+			refreshList();
+			JOptionPane.showMessageDialog(this, "GONE!");
+		});
 		JButton btnRefresh = new JButton("Refresh");
 		btnRefresh.addActionListener(e -> refreshList());
-		JButton btnOrders = new JButton("Orders");
-		btnOrders.addActionListener(e -> orderScreen());
 
 		buttons.add(btnMoreInfo);
 		buttons.add(btnAdd);
 		buttons.add(btnDelete);
 		buttons.add(btnRefresh);
-		buttons.add(btnOrders);
 
-		add(buttons);
-		setTitle("Master");
-		setBounds(350, 200, 860, 550);
-		setVisible(true);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		articleWindow.add(buttons);
+		articleWindow.setTitle("Articles");
+		articleWindow.setBounds(350, 200, 860, 550);
+		articleWindow.setVisible(true);
+		
 	}
 
 	private void refreshList() {
@@ -99,6 +114,7 @@ public class SwingClient extends JFrame {
 	}
 
 	public void orderScreen() {
+		orderModel.removeAllElements();
 		for (CustomerOrder o : getAllOrders()) {
 			orderModel.addElement(o);
 		}
@@ -123,11 +139,19 @@ public class SwingClient extends JFrame {
 		JButton btnAdd = new JButton("Add");
 		btnAdd.addActionListener(e -> orderInfoScreen(new CustomerOrder()));
 		JButton btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(
-				e -> {Main.deleteCustomerOrder(((CustomerOrder) orderList.getSelectedValue()).getOrderNr());
-				JOptionPane.showMessageDialog(orderFrame, "GONE!");});
+		btnDelete.addActionListener(e -> {
+			Main.deleteCustomerOrder(((CustomerOrder) orderList.getSelectedValue()).getOrderNr());
+			orderModel.removeAllElements();
+			for (CustomerOrder o : getAllOrders()) {
+				orderModel.addElement(o);
+			}
+			JOptionPane.showMessageDialog(orderFrame, "GONE!");
+		});
 		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.addActionListener(e -> refreshList());
+		btnRefresh.addActionListener(e -> {orderModel.removeAllElements();
+		for (CustomerOrder o : getAllOrders()) {
+			orderModel.addElement(o);
+		}});
 
 		buttons.add(btnMoreInfo);
 		buttons.add(btnAdd);
@@ -155,14 +179,14 @@ public class SwingClient extends JFrame {
 //		leftPanel.add(new JLabel("Customer: " + order.getCustomer().getCustomerNr() + " "
 //				+ order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName()));
 		JComboBox<Customer> comboCustomers = new JComboBox(getAllCustomers().toArray());
-		
+
 		leftPanel.add(comboCustomers);
 		JComboBox<Article> comboArticles = new JComboBox(getAllArticles().toArray());
 		comboArticles.setRenderer(new ArticleComboRenderer());
 		rightPanel.add(comboArticles);
 		rightPanel.add(new JLabel("Quantity:"));
 		JTextField quantity = new JTextField();
-		//quantity.setPreferredSize(new Dimension(50,20));
+		// quantity.setPreferredSize(new Dimension(50,20));
 		rightPanel.add(quantity);
 		JButton btnAddArt = new JButton("Add article");
 		rightPanel.add(btnAddArt);
@@ -172,7 +196,7 @@ public class SwingClient extends JFrame {
 		dtm.setColumnIdentifiers(new String[] { "ARTICLE NR", "QUANTITY" });
 
 		JTable table = new JTable();
-		
+
 		btnAddArt.addActionListener(e -> {
 			dtm.addRow(new String[] { "" + ((Article) comboArticles.getSelectedItem()).getArtNr(),
 					"" + Integer.parseInt(quantity.getText()) });
@@ -188,27 +212,33 @@ public class SwingClient extends JFrame {
 		JTextField dispatchDate = new JTextField();
 		dispatchDate.setText(order.getDispatchDate());
 		rightPanel.add(dispatchDate);
-		JButton btnDone = new JButton("Update");
+		JButton btnDone = new JButton("Add order");
 		btnDone.addActionListener(e -> {
+			order.setOrderDate(txtODate.getText());
+			order.setCustomer((Customer) comboCustomers.getSelectedItem());
 			order.setDispatchDate(dispatchDate.getText());
 			Map<String, Integer> updatedArt = new HashMap<String, Integer>();
 			for (int i = 0; i < dtm.getRowCount(); i++) {
+				System.out.println((String) dtm.getValueAt(i, 0) + Integer.parseInt((String) dtm.getValueAt(i, 1)));
 				updatedArt.put((String) dtm.getValueAt(i, 0), Integer.parseInt((String) dtm.getValueAt(i, 1)));
 			}
 			order.setArticles(updatedArt);
 			updateOrder(order);
-			JOptionPane.showMessageDialog(orderFrame, "DONE!");
+			//JOptionPane.showMessageDialog(orderFrame, "DONE!");
 		});
 		// cO.getArticles(), cO.getDispatchDate());
 
 		if (order.getOrderNr() != 0) {
+			System.out.println(order.getCustomer());
 			for (Entry<String, Integer> entry : order.getArticles().entrySet()) {
 				dtm.addRow(new String[] { entry.getKey(), "" + entry.getValue() });
 
 			}
+			btnDone.setText("Update");
+			comboCustomers.setEditable(true);
 			comboCustomers.setSelectedItem(order.getCustomer());
+			System.out.println(comboCustomers.getSelectedItem());
 			txtODate.setEditable(false);
-			comboCustomers.setEditable(false);
 			comboCustomers.setEnabled(false);
 		}
 		rightPanel.add(btnDone);
@@ -263,7 +293,7 @@ public class SwingClient extends JFrame {
 			article.setStock(Integer.parseInt(textField1.getText()));
 			article.setPrice(Double.parseDouble(textField2.getText()));
 			updateArticle(article, update);
-			JOptionPane.showMessageDialog(infoFrame, "DONE!");
+
 		});
 		leftPanel.add(btnupdate);
 		infoFrame.add(leftPanel);
@@ -312,19 +342,24 @@ public class SwingClient extends JFrame {
 
 		Entity artEntity = Entity.entity(order, "application/JSON");
 		Response response;
-		if(order.getOrderNr()==0) {
-			response = client.target("http://localhost:8080/olfdb/Pantheon/orders/").request()
-					.buildPost(artEntity).invoke();
+		if (order.getOrderNr() == 0) {
+			response = client.target("http://localhost:8080/olfdb/Pantheon/orders/").request().buildPost(artEntity)
+					.invoke();
 			System.out.println("Inserting Order returned status code of " + response.getStatus());
 
-		}else {
+		} else {
 			response = client.target("http://localhost:8080/olfdb/Pantheon/orders/" + order.getOrderNr()).request()
 					.buildPut(artEntity).invoke();
 			System.out.println("Updating Order returned status code of " + response.getStatus());
+
 		}
-		
-		System.out.println(response.getHeaders().toString());
-		System.out.println(response.readEntity(String.class));
+		if (response.getStatus() == 201 || response.getStatus() == 200) {
+			JOptionPane.showMessageDialog(null, "DONE!");
+			System.out.println(response.readEntity(String.class));
+		} else {
+
+			JOptionPane.showMessageDialog(null, "NOPE!\n" + response.readEntity(String.class));
+		}
 
 		response.close();
 
@@ -376,8 +411,8 @@ public class SwingClient extends JFrame {
 		}
 
 	}
+
 	class ArticleComboRenderer extends JLabel implements ListCellRenderer<Article> {
-	
 
 		public ArticleComboRenderer() {
 			setOpaque(true);
@@ -386,12 +421,11 @@ public class SwingClient extends JFrame {
 
 		}
 
-		
-
 		@Override
 		public Component getListCellRendererComponent(JList<? extends Article> list, Article value, int index,
 				boolean isSelected, boolean cellHasFocus) {
-			setText("Article number: " + value.getArtNr() + " Name: " + value.getName()+" Stock: " +value.getStock() );
+			setText("Article number: " + value.getArtNr() + " Name: " + value.getName() + " Stock: "
+					+ value.getStock());
 			if (isSelected)
 
 			{
