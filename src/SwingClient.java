@@ -219,7 +219,6 @@ public class SwingClient extends JFrame {
 			order.setDispatchDate(dispatchDate.getText());
 			Map<String, Integer> updatedArt = new HashMap<String, Integer>();
 			for (int i = 0; i < dtm.getRowCount(); i++) {
-				System.out.println((String) dtm.getValueAt(i, 0) + Integer.parseInt((String) dtm.getValueAt(i, 1)));
 				updatedArt.put((String) dtm.getValueAt(i, 0), Integer.parseInt((String) dtm.getValueAt(i, 1)));
 			}
 			order.setArticles(updatedArt);
@@ -229,7 +228,6 @@ public class SwingClient extends JFrame {
 		// cO.getArticles(), cO.getDispatchDate());
 
 		if (order.getOrderNr() != 0) {
-			System.out.println(order.getCustomer());
 			for (Entry<String, Integer> entry : order.getArticles().entrySet()) {
 				dtm.addRow(new String[] { entry.getKey(), "" + entry.getValue() });
 
@@ -237,7 +235,6 @@ public class SwingClient extends JFrame {
 			btnDone.setText("Update");
 			comboCustomers.setEditable(true);
 			comboCustomers.setSelectedItem(order.getCustomer());
-			System.out.println(comboCustomers.getSelectedItem());
 			txtODate.setEditable(false);
 			comboCustomers.setEnabled(false);
 		}
@@ -331,6 +328,7 @@ public class SwingClient extends JFrame {
 					.buildPut(artEntity).invoke();
 			System.out.println("Updating Article returned status code of " + response.getStatus());
 		}
+		JOptionPane.showMessageDialog(null, "DONE!");
 		System.out.println(response.getHeaders().toString());
 		System.out.println(response.readEntity(String.class));
 
@@ -353,7 +351,7 @@ public class SwingClient extends JFrame {
 			System.out.println("Updating Order returned status code of " + response.getStatus());
 
 		}
-		if (response.getStatus() == 201 || response.getStatus() == 200) {
+		if (response.getStatus() == 201) {
 			JOptionPane.showMessageDialog(null, "DONE!");
 			System.out.println(response.readEntity(String.class));
 		} else {
